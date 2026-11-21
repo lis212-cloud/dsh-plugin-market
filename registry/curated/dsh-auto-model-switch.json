@@ -1,0 +1,25 @@
+{
+  "id": "dsh-auto-model-switch",
+  "name": "自动切换模型",
+  "type": "bundle",
+  "repo": "lis212-cloud/dsh-auto-model-switch",
+  "spec": "https://github.com/lis212-cloud/dsh-auto-model-switch/releases/download/auto-change-model/dsh-auto-model-switch-1.0.1.tgz",
+  "description": "模型额度耗尽（QUOTA / ACCOUNT_QUOTA）时自动切换备用模型并重试，Agent任务不中断",
+  "license": "MIT",
+  "author": {
+    "name": "lis212-cloud",
+    "url": "https://github.com/lis212-cloud"
+  },
+  "version": "v1.0.1",
+  "longDescription": "## Auto Model Switch 自动模型切换\n监听 `agent/request-error`，当失败码为 `QUOTA` / `ACCOUNT_QUOTA` 额度耗尽时触发降级。\n\n### 功能说明\n- 优先等待 dsh-llm-retry 重试结束，重试失败后才执行切换\n- 按照配置的 `fallbackModels` 优先级列表选取可用备用模型\n- 切换会话默认模型，注入提示消息告知Agent，自动重试本轮请求\n\n### 限制边界\n- 仅捕获额度类报错，**不处理429、超时、鉴权失败、5xx**\n- 无图形配置面板，配置写在 `cordis.patch.yml`\n- 切换后不会自动切回原模型，额度恢复需要手动修改\n- 最大尝试次数默认3次，防止无限循环\n\n### 配置示例\n```yaml\n- insert:\n    - id: auto-model-switch\n      name: '@lis212-cloud/dsh-auto-model-switch'\n      config:\n        fallbackModels:\n          - provider: deepseek\n            model: deepseek-chat\n          - provider: volcengine\n            model: doubao-seed-1-6-flash-250616\n        quotaCodes: [QUOTA, ACCOUNT_QUOTA]\n        notify: true\n        maxAttempts: 3\n",
+  "tags": [
+    "model",
+    "switch",
+    "quota",
+    "fallback",
+    "reliability",
+    "provider"
+  ],
+  "package": "@lis212-cloud/dsh-auto-model-switch",
+  "source": "curated"
+}
